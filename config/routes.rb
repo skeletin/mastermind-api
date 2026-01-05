@@ -7,7 +7,7 @@ Rails.application.routes.draw do
       scope :auth do
         post "register", to: "auth#register"
         post "login", to: "auth#login"
-        get "is_logged_in/:user_id", to: "auth#is_logged_in"
+        get "is_logged_in", to: "auth#is_logged_in"
       end
 
       scope :games do

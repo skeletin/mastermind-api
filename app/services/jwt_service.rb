@@ -8,4 +8,22 @@ module JwtService
     payload[:aud] = JWT_AUDIENCE
     JWT.encode(payload, JWT_SECRET, "HS256")
   end
+
+  def decode_token(request)
+    auth_header = request.headers["Authorization"]
+    token = auth_header&.split&.last
+    raise UnauthorizedError.new("No Token") unless token
+    begin
+      get_current_user(JWT.decode(token, JWT_SECRET, true, algorithm: "HS256"))
+    rescue JWT::DecodeError
+      raise UnauthenticatedError
+    end
+  end
+
+  private
+  def get_current_user(decoded_token)
+    user_id = decoded_token[0]["user_id"]
+    current_user = User.find_by(id: user_id)
+    current_user ? current_user : raise(UnauthenticatedError)
+  end
 end

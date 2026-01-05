@@ -10,5 +10,6 @@ development:
   <<: *default
 test:
   <<: *default
+  database: mastermind-api-test
 production:
   <<: *default
